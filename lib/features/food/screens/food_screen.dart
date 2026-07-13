@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'order_tracking_screen.dart';
+import 'restaurant_detail_screen.dart';
+import '../models/restaurant_model.dart';
 
 class FoodScreen extends StatelessWidget {
   const FoodScreen({super.key});
@@ -11,11 +12,20 @@ class FoodScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        leading: const Icon(Icons.location_on, color: AppColors.primary),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Kirim ke', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+            Row(
+              children: [
+                Icon(Icons.location_on, color: AppColors.primary, size: 14),
+                SizedBox(width: 4),
+                Text('Kirim ke', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+              ],
+            ),
             Row(
               children: [
                 Text('Jl. Melawai No. 10', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
@@ -95,22 +105,7 @@ class FoodScreen extends StatelessWidget {
               child: Text('Populer di Sekitarmu', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
             ),
             const SizedBox(height: 16),
-            _buildRestaurantItem(
-              context,
-              'McDonald\'s - Melawai',
-              '4.8',
-              '15 min • 1.2 km',
-              'Rp9.000 Delivery',
-              'Diskon 20% s/d 20rb',
-            ),
-            _buildRestaurantItem(
-              context,
-              'KFC - Melawai',
-              '4.6',
-              '20 min • 1.5 km',
-              'Rp10.000 Delivery',
-              'Diskon 20% s/d 20rb',
-            ),
+            ...dummyRestaurants.map((restaurant) => _buildRestaurantItem(context, restaurant)),
           ],
         ),
       ),
@@ -136,10 +131,10 @@ class FoodScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRestaurantItem(BuildContext context, String name, String rating, String timeDist, String deliveryFee, String promo) {
+  Widget _buildRestaurantItem(BuildContext context, RestaurantModel restaurant) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const OrderTrackingScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (_) => RestaurantDetailScreen(restaurant: restaurant)));
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -153,44 +148,51 @@ class FoodScreen extends StatelessWidget {
                 color: Colors.grey[300],
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.fastfood, color: Colors.white, size: 40),
+              child: restaurant.imageUrl.isEmpty
+                  ? const Icon(Icons.fastfood, color: Colors.white, size: 40)
+                  : ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(restaurant.imageUrl, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const Icon(Icons.fastfood, color: Colors.white, size: 40)),
+                    ),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  Text(restaurant.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   const SizedBox(height: 4),
                   Row(
                     children: [
                       const Icon(Icons.star, color: AppColors.yellowStar, size: 14),
                       const SizedBox(width: 4),
-                      Text(rating, style: const TextStyle(fontSize: 12)),
+                      Text(restaurant.rating.toString(), style: const TextStyle(fontSize: 12)),
                       const SizedBox(width: 8),
                       Text('•', style: TextStyle(color: Colors.grey[400], fontSize: 12)),
                       const SizedBox(width: 8),
-                      Text(timeDist, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+                      Text(restaurant.distanceStr, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
                     ],
                   ),
                   const SizedBox(height: 4),
-                  Text(deliveryFee, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
-                  const SizedBox(height: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(4),
+                  Text(restaurant.deliveryFeeStr, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+                  if (restaurant.promo.isNotEmpty) ...[
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.orange.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.local_offer, color: Colors.orange, size: 12),
+                          const SizedBox(width: 4),
+                          Text(restaurant.promo, style: const TextStyle(color: Colors.orange, fontSize: 10, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.local_offer, color: Colors.orange, size: 12),
-                        const SizedBox(width: 4),
-                        Text(promo, style: const TextStyle(color: Colors.orange, fontSize: 10, fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                  ),
+                  ],
                 ],
               ),
             ),

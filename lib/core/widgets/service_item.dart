@@ -22,20 +22,26 @@ class ServiceItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 50,
-            height: 50,
-            padding: const EdgeInsets.all(10),
+            width: 64,
+            height: 64,
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppColors.greyBackground,
+              color: AppColors.primary.withOpacity(0.1), // maron pudar
               borderRadius: BorderRadius.circular(16),
             ),
-            child: SvgPicture.asset(iconPath),
+            child: SvgPicture.asset(
+              iconPath,
+              colorFilter: const ColorFilter.mode(
+                AppColors.primary,
+                BlendMode.srcIn,
+              ),
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             title,
             style: const TextStyle(
-              fontSize: 12,
+              fontSize: 13,
               fontWeight: FontWeight.w500,
             ),
             textAlign: TextAlign.center,
