@@ -1,18 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/colors.dart';
-import 'choose_service_screen.dart';
-import 'driver_on_way_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class RoutePickerScreen extends StatefulWidget {
-  const RoutePickerScreen({super.key});
-
-  @override
-  State<RoutePickerScreen> createState() => _RoutePickerScreenState();
-}
-
-class _RoutePickerScreenState extends State<RoutePickerScreen> {
-  int _selectedServiceIndex = 0; // 0 for Motor, 1 for Mobil
+class MotorScreen extends StatelessWidget {
+  const MotorScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -60,16 +51,16 @@ class _RoutePickerScreenState extends State<RoutePickerScreen> {
                     ),
                   ),
                   
-                  // Mock Cars/Motors (just icons)
+                  // Mock Motorcycles (just icons)
                   Positioned(
                     top: 320,
                     left: 100,
-                    child: Icon(_selectedServiceIndex == 0 ? Icons.two_wheeler : Icons.directions_car, color: Colors.grey[700]),
+                    child: Icon(Icons.two_wheeler, color: Colors.grey[700]),
                   ),
                   Positioned(
                     top: 400,
                     left: 180,
-                    child: Icon(_selectedServiceIndex == 0 ? Icons.two_wheeler : Icons.directions_car, color: Colors.grey[700]),
+                    child: Icon(Icons.two_wheeler, color: Colors.grey[700]),
                   ),
                 ],
               ),
@@ -128,7 +119,7 @@ class _RoutePickerScreenState extends State<RoutePickerScreen> {
                       const SizedBox(width: 16),
                       const Expanded(
                         child: Text(
-                          'Pasaraya Blok M',
+                          'Tujuan Anda',
                           style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -145,58 +136,47 @@ class _RoutePickerScreenState extends State<RoutePickerScreen> {
             alignment: Alignment.bottomCenter,
             child: Container(
               padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 20,
-                    offset: const Offset(0, -5),
-                  ),
-                ],
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('Pilih Layanan', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (_) => const ChooseServiceScreen()));
-                        },
-                        child: const Text('Promo Tersedia', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 12)),
-                      ),
-                    ],
-                  ),
+                  const Text('Rekomendasi Layanan', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   const SizedBox(height: 16),
                   
-                  // Services List
-                  Column(
-                    children: [
-                      _buildServiceOption(
-                        index: 0,
-                        title: 'GoRide',
-                        subtitle: '1 Penumpang',
-                        price: 'Rp15.000',
-                        originalPrice: 'Rp20.000',
-                        time: '1 - 3 menit',
-                        iconAsset: 'assets/icons/goride.svg',
-                      ),
-                      const SizedBox(height: 12),
-                      _buildServiceOption(
-                        index: 1,
-                        title: 'GoCar',
-                        subtitle: '1-4 Penumpang',
-                        price: 'Rp25.000',
-                        originalPrice: 'Rp35.000',
-                        time: '3 - 5 menit',
-                        iconAsset: 'assets/icons/gocar.svg',
-                      ),
-                    ],
+                  // GoRide Item
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withOpacity(0.05),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+                    ),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset('assets/icons/goride.svg', width: 40, height: 40),
+                        const SizedBox(width: 12),
+                        const Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('GoRide', style: TextStyle(fontWeight: FontWeight.bold)),
+                              Text('1 Penumpang', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+                            ],
+                          ),
+                        ),
+                        const Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text('Rp15.000', style: TextStyle(fontWeight: FontWeight.bold)),
+                            Text('1 - 3 menit', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                   
                   const SizedBox(height: 16),
@@ -210,7 +190,7 @@ class _RoutePickerScreenState extends State<RoutePickerScreen> {
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
                               color: AppColors.ovoPurple.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(4),
@@ -238,20 +218,20 @@ class _RoutePickerScreenState extends State<RoutePickerScreen> {
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
+                      onPressed: () {},
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
-                        foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        elevation: 0,
                       ),
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => const DriverOnWayScreen()));
-                      },
-                      child: Text(
-                        _selectedServiceIndex == 0 ? 'Pesan GoRide' : 'Pesan GoCar',
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      child: const Text(
+                        'Pesan GoRide',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                     ),
                   ),
@@ -260,79 +240,6 @@ class _RoutePickerScreenState extends State<RoutePickerScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-  
-  Widget _buildServiceOption({
-    required int index,
-    required String title,
-    required String subtitle,
-    required String price,
-    required String originalPrice,
-    required String time,
-    required String iconAsset,
-  }) {
-    bool isSelected = _selectedServiceIndex == index;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedServiceIndex = index;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary.withOpacity(0.05) : Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.border,
-            width: isSelected ? 2 : 1,
-          ),
-        ),
-        child: Row(
-          children: [
-            SvgPicture.asset(iconAsset, width: 40, height: 40),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  const SizedBox(height: 2),
-                  Row(
-                    children: [
-                      const Icon(Icons.person, size: 12, color: AppColors.textSecondary),
-                      const SizedBox(width: 4),
-                      Text(subtitle, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      originalPrice,
-                      style: const TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: 12,
-                        decoration: TextDecoration.lineThrough,
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    Text(price, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  ],
-                ),
-                const SizedBox(height: 2),
-                Text(time, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
-              ],
-            ),
-          ],
-        ),
       ),
     );
   }
